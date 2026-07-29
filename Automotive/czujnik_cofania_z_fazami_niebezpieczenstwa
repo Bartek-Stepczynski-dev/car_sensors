@@ -1,0 +1,97 @@
+const int buzzer = 5;
+const int trig_pin = 3;
+const int echo_pin = 4;
+int rdioda = 10;
+int ydioda = 9;
+int gdioda = 8;
+int rpin = 11;
+int gpin = 12;
+int bpin = 13; 
+float timing = 0.0;
+float distance = 0.0;
+
+void setup() {
+  pinMode(echo_pin, INPUT);
+  pinMode(trig_pin, OUTPUT);
+  pinMode(buzzer, OUTPUT);
+  pinMode(rdioda,OUTPUT);
+  pinMode(ydioda,OUTPUT);
+  pinMode(gdioda,OUTPUT);
+  pinMode(rpin,OUTPUT);
+  pinMode(gpin,OUTPUT);
+  pinMode(bpin,OUTPUT);
+  
+  digitalWrite(trig_pin, LOW);
+  analogWrite(buzzer,0);
+  digitalWrite(rdioda,LOW);
+  digitalWrite(ydioda,LOW);
+  digitalWrite(gdioda,LOW);  
+  
+  Serial.begin(9600);
+}
+
+void loop() {
+  digitalWrite(trig_pin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trig_pin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trig_pin, LOW);
+  
+  
+  
+  timing = pulseIn(echo_pin, HIGH);
+  distance = (timing * 0.034) / 2;
+  
+  Serial.print("Distance: ");
+  Serial.print(distance);
+  Serial.print("cm | ");
+  Serial.print(distance / 2.54);
+  Serial.println("in");
+  
+    
+  if (distance >5 && distance <=12) {
+  	tone(buzzer,200);
+    digitalWrite(gdioda,LOW);
+    digitalWrite(ydioda,LOW);
+    digitalWrite(rdioda,HIGH);
+    digitalWrite(rpin,LOW);
+    digitalWrite(gpin,LOW);
+    digitalWrite(bpin,LOW); 
+    
+  } 
+  else if (distance > 12 && distance <=22) {
+    tone(buzzer,100);
+    digitalWrite(gdioda,LOW);
+    digitalWrite(rdioda,LOW);
+    digitalWrite(ydioda,HIGH);
+    digitalWrite(rpin,LOW);
+    digitalWrite(gpin,LOW);
+    digitalWrite(bpin,LOW); 
+    
+  
+  }
+  else if(distance <=5)  {  
+    tone(buzzer,500);
+    digitalWrite(rpin,HIGH);
+    digitalWrite(gpin,HIGH);
+    digitalWrite(bpin,HIGH);
+    digitalWrite(rdioda,LOW);
+    digitalWrite(ydioda,LOW);
+    digitalWrite(gdioda,LOW);
+
+  }
+  
+  
+  else  {
+  	noTone(buzzer);
+    digitalWrite(rdioda,LOW);
+    digitalWrite(ydioda,LOW);
+    digitalWrite(gdioda,HIGH);
+    digitalWrite(rpin,LOW);
+    digitalWrite(gpin,LOW);
+    digitalWrite(bpin,LOW);
+  
+  }
+
+   delay(60);
+}
